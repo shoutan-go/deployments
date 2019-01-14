@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gnugo-as-a-service
+  labels:
+    app: gnugo
+    tier: backend
+spec:
+  ports:
+  - port: 80
+    targetPort: 5000
+  selector:
+    app: gnugo
+    tier: backend

@@ -1,0 +1,30 @@
+apiVersion: apps/v1beta1 # for versions before 1.8.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: assets
+spec:
+  selector:
+    matchLabels:
+      app: assets
+      role: master
+      tier: backend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: assets
+        role: master
+        tier: backend
+    spec:
+      containers:
+      - name: assets
+        image: nginx:1.14
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - mountPath: /etc/nginx
+            name: config
+      volumes:
+        - configMap:
+            name: assets-config
+          name: config

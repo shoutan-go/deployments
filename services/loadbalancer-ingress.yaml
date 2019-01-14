@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-nginx
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+      protocol: TCP
+    - name: https
+      port: 443
+      nodePort: 30443
+      targetPort: 443
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web
+spec:
+  rules:
+  - host: game.shoutanwq.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: game-server
+          servicePort: 80
+  - host: course.shoutanwq.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: shoutan-course
+          servicePort: 80
+  - host: shoutanwq.com
+    http:
+      paths:
+      - backend:
+          serviceName: shoutan-login
+          servicePort: 80
+        path: /login
+      - backend:
+          serviceName: game-server
+          servicePort: 80
+        path: /
+

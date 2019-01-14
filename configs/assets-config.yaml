@@ -1,0 +1,31 @@
+apiVersion: v1
+data:
+  nginx.conf: |
+    worker_processes 2;
+    events {}
+    http {
+      server {
+        server_name _;
+        listen 80 default_server;
+        location /assets {
+          try_files @game @course @login @main;
+        }
+
+        location @game {
+            proxy_pass http://game-server;
+        }
+        location @course {
+            proxy_pass http://shoutan-course;
+        }
+        location @login {
+            proxy_pass http://shoutan-login;
+        }
+        location @main {
+            proxy_pass http://game-server;
+        }
+      }
+    }
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: assets-config
